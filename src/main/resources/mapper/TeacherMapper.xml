@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.TeacherMapper">
+
+    <resultMap id="teacherResultMap" type="Teacher">
+        <result column="employee_num" property="employeeNum"/>
+    </resultMap>
+<!--删除多个-->
+    <delete id="deleteByIds">
+        DELETE FROM teacher WHERE id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectTeachersByCondition" resultMap="teacherResultMap">
+        SELECT * FROM teacher
+        <where>
+            <if test="name != null and name !=''">
+                and name like CONCAT(CONCAT("%",#{name}),"%")
+            </if>
+            <if test="sex != null and sex !=''">
+                and sex like  CONCAT(CONCAT("%",#{sex}),"%")
+            </if>
+            <if test="experience != null and experience !=''">
+                and  experience like  CONCAT(CONCAT("%",#{experience}),"%")
+            </if>
+            <if test="competent != null and competent !=''">
+                and competent like CONCAT(CONCAT("%",#{competent}),"%")
+            </if>
+            <if test="employeeNum != null and employeeNum !=''">
+                and employee_num like CONCAT(CONCAT("%",#{employeeNum}),"%")
+            </if>
+        </where>
+    </select>
+</mapper>

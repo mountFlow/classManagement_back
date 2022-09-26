@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ClassroomAvailableMapper">
+
+    <resultMap id="ClassroomAvailableResultMap" type="classroomAvailable">
+        <result column="classroom_id" property="classroomId"/>
+    </resultMap>
+
+    <select id="selectByCondition" resultMap="ClassroomAvailableResultMap">
+        SELECT * FROM classroom_available
+        <where>
+            <if test="classroomId != null and classroomId !=''">
+                and classroom_id like  #{classroomId}
+            </if>
+            <if test="week != null and week !=''">
+                and week like #{week}
+            </if>
+            <if test="date != null and date !=''">
+                and date like #{date}
+            </if>
+            <if test="time != null and time !=''">
+                and time like #{time}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            color: #333;
+        }
+    </style>
+
+</head>
+<body>
+<!--3.设置vue模型-->
+<div id="app">
+<!--
+
+
+       这里开始是弹窗设置
+
+
+ -->
+<!-- 添加新老师信息的对话框-->
+    <el-dialog
+            title="新增教职工信息"
+            :visible.sync="dialogVisible"
+            width="30%"
+    >
+
+        <el-form ref="form" :model="teacher" label-width="80px">
+            <el-form-item label="工号">
+                <el-input v-model="teacher.employeeNum" value="3000"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名">
+                <el-input v-model="teacher.name"></el-input>
+            </el-form-item>
+
+            <el-form-item label="性别">
+                <el-radio v-model="teacher.sex" label="男">男</el-radio>
+                <el-radio v-model="teacher.sex" label="女">女</el-radio>
+            </el-form-item>
+
+            <el-form-item label="职称">
+            <el-select v-model="teacher.competent" placeholder="请选择" >
+                <el-option
+                        v-for="item in optionsForCompetent"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            </el-form-item>
+
+            <el-form-item label="任职年份">
+                <el-input v-model="teacher.experience"></el-input>
+            </el-form-item>
+
+            <el-form-item label="密码">
+                <el-input type="text" v-model="teacher.password"></el-input>
+            </el-form-item>
+
+
+            <el-form-item>
+                <el-button type="primary" @click="addTeacher" style="background-color: #4fac67;border-color: #4fac67">提交</el-button>
+                <el-button @click="dialogVisible = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+    </el-dialog>
+
+<!--    编辑老师信息的对话框-->
+    <el-dialog
+            title="编辑教职工信息"
+            :visible.sync="dialogVisible2"
+            width="30%"
+    >
+
+        <el-form ref="form" :model="teacher" label-width="80px">
+            <el-form-item label="工号">
+                <el-input v-model="teacher.employeeNum" ></el-input>
+            </el-form-item>
+            <el-form-item label="姓名">
+                <el-input v-model="teacher.name"></el-input>
+            </el-form-item>
+
+            <el-form-item label="性别">
+                <el-radio v-model="teacher.sex" label="男">男</el-radio>
+                <el-radio v-model="teacher.sex" label="女">女</el-radio>
+            </el-form-item>
+
+            <el-form-item label="职称">
+                <el-select v-model="teacher.competent" placeholder="请选择" >
+                    <el-option
+                            v-for="item in optionsForCompetent"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="任职年份">
+                <el-input v-model="teacher.experience"></el-input>
+            </el-form-item>
+
+            <el-form-item label="密码">
+                <el-input type="text" v-model="teacher.password"></el-input>
+            </el-form-item>
+
+
+            <el-form-item>
+                <el-button type="primary" @click="updateTeacher,dialogVisible2 = false" style="background-color: #4fac67;border-color: #4fac67">提交</el-button>
+                <el-button @click="dialogVisible2 = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+    </el-dialog>
+
+
+    <!--
+
+
+
+
+
+
+       弹窗设置结束
+
+
+
+
+
+
+ -->
+    <!--    主页面信息-->
+    <el-container style="height: 100%; border: 1px solid #eee">
+<!--        background-image: linear-gradient(100deg, #4e7c56, #4fac67);-->
+            <el-header style="text-align: right; height: 100px; font-size: 12px ;background-size: contain; background-image: url(http://localhost:8080/brand_case_war_exploded/pic/header.png); ">
+                <el-dropdown>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>查看</el-dropdown-item>
+                        <el-dropdown-item>新增</el-dropdown-item>
+                        <el-dropdown-item>删除</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <span style="color: white; font-size: large">欢迎您！ 吴博维同学</span>
+            </el-header>
+        <el-container>
+
+            <el-aside width="200px" style="background-color:#dfebe2; ">
+                <el-menu :default-openeds="['1', '3']">
+                    <el-submenu index="1">
+                        <template slot="title"><i class="el-icon-message"></i>教室管理</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="1-1">第三教学楼</el-menu-item>
+                            <el-menu-item index="1-2">第四教学楼</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <el-submenu index="2">
+                        <template slot="title"><i class="el-icon-menu"></i>教职工与学生管理</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="2-1">教职工管理</el-menu-item>
+                            <el-menu-item index="2-2">学生管理</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <el-menu-item index="3"><i class="el-icon-setting"></i>课程管理</el-menu-item>
+                    <el-menu-item index="4"><i class="el-icon-setting"></i>授课管理</el-menu-item>
+                </el-menu>
+            </el-aside>
+
+            <el-main>
+
+
+                <template>
+<!--                    下面是搜索的内嵌表单-->
+<!--                    <el-form :inline="true" :model="brand" class="demo-form-inline">-->
+
+<!--                        <el-form-item label="当前状态">-->
+<!--                            <el-select v-model="brand.status" placeholder="当前状态">-->
+<!--                                <el-option label="启用" value="1"></el-option>-->
+<!--                                <el-option label="禁用" value="0"></el-option>-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+
+<!--                        <el-form-item label="企业名称">-->
+<!--                            <el-input v-model="brand.companyName" placeholder="企业名称"></el-input>-->
+<!--                        </el-form-item>-->
+
+<!--                        <el-form-item label="品牌名称">-->
+<!--                            <el-input v-model="brand.brandName" placeholder="品牌名称"></el-input>-->
+<!--                        </el-form-item>-->
+
+<!--                        <el-form-item>-->
+<!--                            <el-button type="primary" @click="onSubmit">查询</el-button>-->
+<!--                        </el-form-item>-->
+<!--                    </el-form>-->
+                    <el-row>
+
+<!--                        <el-button type="danger" plain @click="deleteByIds">批量删除</el-button>-->
+                        <el-button type="primary" icon="el-icon-plus" @click="dialogVisible = true,giveBasicValue()" style="background-color: #4fac67;border-color: #4fac67"></el-button>
+                        <el-button type="primary" icon="el-icon-delete" @click="deleteByIds" style="background-color: #f56c6c;border-color: #f56c6c"></el-button>
+
+                        <el-button type="primary" icon="el-icon-search" style="background-color: #4fac67;border-color: #4fac67">搜索</el-button>
+
+                    </el-row>
+                    <br>
+                <el-table :data="tableData"
+                          @selection-change="handleSelectionChange"
+                          stripe
+                >
+                    <el-table-column
+                            type="selection"
+                            width="55">
+                    </el-table-column>
+                    <el-table-column prop="employeeNum" label="工号" width="80">
+                    </el-table-column>
+                    <el-table-column prop="name" label="姓名" width="120">
+                    </el-table-column>
+                    <el-table-column prop="sex" label="性别">
+                    </el-table-column>
+                    <el-table-column prop="competent" label="职称">
+                    </el-table-column>
+                    <el-table-column prop="experience" label="任职年份">
+                    </el-table-column>
+                    <el-table-column prop="password" label="密码">
+                    </el-table-column>
+                    <el-table-column
+                            align="center"
+                            label="操作">
+                        <template slot-scope="scope">
+                        <el-button type="success" size="small" style="background-color: #4fac67;"
+                                   @click="handleEdit(scope.row),dialogVisible2 = true"
+                        >修改</el-button>
+                        <el-button type="danger" size="small"
+                                   @click="deleteById(scope.row)"
+                        >删除
+                        </el-button>
+                        </template>
+                        </el-table-column>
+                </el-table>
+                </template>
+            </el-main>
+        </el-container>
+    </el-container>
+<!--    届时elementui的代码粘贴在这里-->
+</div>
+</body>
+
+
+
+<!--1.引入element的css，js和 vue.js-->
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<script>
+    <!--2.创建vue核心对象-->
+    // new Vue({
+    //     el:"#app",
+    //     data: function() {
+    //         return { visible: false }
+    //     }
+    // })
+    new Vue({
+        el:"#app",
+        //1.加载完成后
+        created(){
+            console.log('show index')
+         this.selectAllTeachers();
+
+        },
+
+        methods:{
+            selectAllTeachers(){
+                axios({
+                    method:"get",
+                    //3.指定获取数据的servlet
+                    url:"http://localhost:8080/brand_case_war_exploded/teacher/selectAllTeachers"
+                    //4.然后请求就发出去了,在下面的then中绑定一个回调的参数
+                }).then(resp =>{
+                    //tabledata是对应数据区域获取数据的dataid
+                    this.tableData = resp.data;
+                  //  console.log(this.tableData);
+                })
+            },
+
+            addTeacher(){
+
+                //1.发送ajax请求添加数据
+                axios({
+                    method:"post",
+                    //2.传输到对应处理的servlet
+                    url: "http://localhost:8080/brand_case_war_exploded/teacher/addTeacher",
+                    //3.将对话框的对象作为数据传输过去
+                    data:this.teacher
+                    //4.接收回调
+                }).then(resp=>{
+                    console.log(resp.data);
+                    if (resp.data == "success"){//5.添加成功则关闭对话框，重新查询数据,弹出提示添加成功消息框
+                        this.dialogVisible = false;
+                        this.selectAllTeachers();
+                        this.$message({
+                            message: "恭喜您！添加成功！",
+                            type: 'success'
+                        })}else{
+                        this.$message.error('添加失败');
+                    }
+
+                })
+
+            },
+            updateTeacher(){
+
+                //1.发送ajax请求添加数据
+                axios({
+                    method:"post",
+                    //2.传输到对应处理的servlet
+                    url: "http://localhost:8080/brand_case_war_exploded/teacher/updateTeacher",
+                    //3.将对话框的对象作为数据传输过去
+                    data:this.teacher
+                    //4.接收回调
+                }).then(resp=>{
+                    console.log(resp.data);
+                    if (resp.data == "success"){//5.添加成功则关闭对话框，重新查询数据,弹出提示添加成功消息框
+                        this.dialogVisible = false;
+                        this.selectAllTeachers();
+                        this.$message({
+                            message: "修改成功！",
+                            type: 'success'
+                        })}else{
+                        this.$message.error('修改失败');
+                    }
+
+                })
+
+            },
+            deleteById(row){
+                this.$confirm('此操作将永久删除这条教师信息, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //1.发送ajax请求删除数据
+                        axios({
+                            method:"post",
+                            //2.传输到对应处理的servlet
+                            url: "http://localhost:8080/brand_case_war_exploded/teacher/deleteTeacher",
+                            //3.将row的id传过去
+                            data:row.id
+                            //4.接收回调
+                        }).then(resp=>{
+                            if (resp.data == "success"){//5.添加成功则关闭对话框，重新查询数据,弹出提示添加成功消息框
+                                this.dialogVisible = false;
+                                this.selectAllTeachers();
+                                this.$message({
+                                    message: "删除成功",
+                                    type: 'success'
+                                })}else{
+                                this.$message.error('删除失败');
+                            }
+                        })
+
+                })
+            },
+            deleteByIds(){
+               // console.log(this.multipleSelection)
+                this.$confirm('此操作将永久删除这些教师信息, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //1.从多选框回调的一个个对象中遍历取出id
+                    for (let i = 0; i < this.multipleSelection.length;i++) {
+                        this.selectedIds[i] = this.multipleSelection[i].id;
+                    }
+                    //2. 发送ajax，传送id请求删除
+
+                        axios({
+                            method:"post",
+                            //2.传输到对应处理的servlet
+                            url: "http://localhost:8080/brand_case_war_exploded/teacher/deleteTeachers",
+                            //3.将对话框的对象作为数据传输过去
+                            data:this.selectedIds
+                            //4.接收回调
+                        }).then(resp=>{
+                            if (resp.data == "success"){//5.添加成功则关闭对话框，重新查询数据,弹出提示添加成功消息框
+                                this.dialogVisible = false;
+                                this.selectAllTeachers();
+                                this.$message({
+                                    message: "删除成功",
+                                    type: 'success'
+                                })}else{
+                                this.$message.error('删除失败');
+                            }
+                        })
+
+                })
+            },
+            //多选框的回调函数
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+
+            //编辑某一行的回调函数
+            handleEdit(row) {
+                this.teacher=row;
+
+            },
+            giveBasicValue(){
+                this.teacher.id=3000;
+                this.teacher.name='';
+                this.teacher.sex='';
+                this.teacher.experience="2001";
+                this.teacher.competent="";
+                this.teacher.password="123456";
+                this.teacher.employeeNum="3000";
+            },
+
+        },
+
+        data() {
+
+
+             var item = {
+                id: '452',
+                name: '111',
+                sex: '11',
+                experience: "11",
+                competent: "11",
+                password: "123456",
+                employeeNum: "3001"
+            };
+            return {
+                //表单的可视信息
+                dialogVisible: false,
+                dialogVisible2: false,
+                // 老师信息模型数据
+                teacher: {
+                    id: '',
+                    name: '',
+                    sex: '',
+                    experience: "2001",
+                    competent: "",
+                    password: "123456",
+                    employeeNum: "3000"
+                },
+                selectedIds:[],
+                tableData: Array(20).fill(item),
+                optionsForCompetent: [{
+                    value: '讲师',
+                    label: '讲师'
+                }, {
+                    value: '副教授',
+                    label: '副教授'
+                }, {
+                    value: '教授',
+                    label: '教授'
+                }],
+
+            }
+        }
+    })
+</script>
+</html>

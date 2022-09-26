@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ClassMapper">
+
+    <resultMap id="classResultMap" type="ClassPojo">
+        <result column="class_name" property="className"/>
+        <result column="total_students" property="totalStudents"/>
+    </resultMap>
+<!--删除多个-->
+    <delete id="deleteByIds">
+        DELETE FROM class WHERE id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+
+    </delete>
+
+    <select id="selectClassesByCondition" resultMap="classResultMap">
+        SELECT * FROM class
+        <where>
+            <if test="grade != null and grade !=''">
+                and grade like CONCAT(CONCAT("%",#{grade}),"%")
+            </if>
+            <if test="className != null and className !=''">
+                and class_name like  #{className}
+            </if>
+            <if test="totalStudents != null and totalStudents !=''">
+                and total_students like  CONCAT(CONCAT("%",#{totalStudents}),"%")
+            </if>
+
+            <if test="major != null and major !=''">
+                and major like CONCAT(CONCAT("%",#{major}),"%")
+            </if>
+        </where>
+    </select>
+</mapper>

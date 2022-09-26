@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ClassroomArrangementMapper">
+
+    <resultMap id="ClassroomArrangementResultMap" type="ClassroomArrangement">
+        <result column="classroom_id" property="classroomId"/>
+        <result column="course_teacher_id" property="courseTeacherId"/>
+        <result column="student_id" property="studentId"/>
+    </resultMap>
+<!--删除多个-->
+    <delete id="deleteByIds">
+        DELETE FROM classroom_arrangement WHERE id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByCondition" resultMap="ClassroomArrangementResultMap">
+        SELECT * FROM classroom_arrangement
+        <where>
+            <if test="classroomId != null and classroomId !=''">
+                and classroom_id like  #{classroomId}
+            </if>
+            <if test="courseTeacherId != null and courseTeacherId !=''">
+                and course_teacher_id like  #{courseTeacherId}
+            </if>
+            <if test="studentId != null and studentId !=''">
+                and  student_id like  #{studentId}
+            </if>
+            <if test="week != null and week !=''">
+                and week like #{week}
+            </if>
+            <if test="date != null and date !=''">
+                and date like #{date}
+            </if>
+            <if test="time != null and time !=''">
+                and time like #{time}
+            </if>
+        </where>
+    </select>
+</mapper>

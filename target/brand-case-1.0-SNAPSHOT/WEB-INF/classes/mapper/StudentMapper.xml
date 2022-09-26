@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.StudentMapper">
+
+    <resultMap id="studentResultMap" type="Student">
+        <result column="class_name" property="className"/>
+        <result column="student_num" property="studentNum"/>
+    </resultMap>
+
+    <resultMap id="studentResultMap2" type="StudentOrginal">
+        <result column="class_Id" property="classId"/>
+        <result column="student_num" property="studentNum"/>
+    </resultMap>
+<!--É¾³ý¶à¸ö-->
+    <delete id="deleteByIds">
+        DELETE FROM student WHERE id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByIds" resultMap="studentResultMap">
+        SELECT student.id,student.grade,name,class_name,major,student_num,password from student, class WHERE student.class_id=class.id and student.id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+
+    <select id="selectStudentsByCondition" resultMap="studentResultMap2">
+        SELECT * FROM student
+        <where>
+            <if test="grade != null and grade !=''">
+                and name like CONCAT(CONCAT("%",#{grade}),"%")
+            </if>
+            <if test="classId != null and classId !=''">
+                and class_id like #{classId}
+            </if>
+            <if test="name != null and name !=''">
+                and  name like  CONCAT(CONCAT("%",#{name}),"%")
+            </if>
+            <if test="password != null and password !=''">
+                and competent like CONCAT(CONCAT("%",#{competent}),"%")
+            </if>
+            <if test="studentNum != null and studentNum !=''">
+                and student_num like CONCAT(CONCAT("%",#{studentNum}),"%")
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ClassroomMapper">
+
+    <resultMap id="classroomResultMap" type="Classroom">
+        <result column="lent_status" property="lentStatus"/>
+    </resultMap>
+<!--É¾³ý¶à¸ö-->
+    <delete id="deleteByIds">
+        DELETE FROM classroom WHERE  id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByCondition3" resultMap="classroomResultMap">
+        SELECT * FROM classroom WHERE building = 3
+            <if test="building != null and building !=''">
+                and building like #{building}
+            </if>
+            <if test="floor != null and floor !=''">
+                and floor like #{floor}
+            </if>
+            <if test="num != null and num !=''">
+                and  num like  CONCAT(CONCAT("%",#{num}),"%")
+            </if>
+            <if test="type != null and type !=''">
+                and type like CONCAT(CONCAT("%",#{type}),"%")
+            </if>
+            <if test="status != null and status !=''">
+            and  status like #{status}
+            </if>
+    </select>
+    <select id="selectByCondition4" resultMap="classroomResultMap">
+        SELECT * FROM classroom WHERE building = 4
+        <if test="building != null and building !=''">
+            and building like #{building}
+        </if>
+        <if test="floor != null and floor !=''">
+            and floor like #{floor}
+        </if>
+        <if test="num != null and num !=''">
+            and  num like  CONCAT(CONCAT("%",#{num}),"%")
+        </if>
+        <if test="type != null and type !=''">
+            and type like CONCAT(CONCAT("%",#{type}),"%")
+        </if>
+        <if test="status != null and status !=''">
+            and status like #{status}
+        </if>
+    </select>
+</mapper>

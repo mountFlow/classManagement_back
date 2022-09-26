@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.CourseMapper">
+
+    <resultMap id="courseResultMap" type="Course">
+        <result column="course_name" property="courseName"/>
+        <result column="total_hour" property="totalHour"/>
+        <result column="class_type" property="classType"/>
+        <result column="evaluation_mode" property="evaluationMode"/>
+    </resultMap>
+<!--É¾³ý¶à¸ö-->
+    <delete id="deleteByIds">
+        DELETE FROM course WHERE id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByCondition" resultMap="courseResultMap">
+        SELECT * FROM course
+        <where>
+            <if test="courseName != null and courseName !=''">
+                and course_name like CONCAT(CONCAT("%",#{courseName}),"%")
+            </if>
+            <if test="totalHour != null and totalHour !=''">
+                and total_hour like  CONCAT(CONCAT("%",#{totalHour}),"%")
+            </if>
+            <if test="classType != null and classType !=''">
+                and  class_type like  CONCAT(CONCAT("%",#{classType}),"%")
+            </if>
+            <if test="evaluationMode != null and evaluationMode !=''">
+                and evaluation_mode like CONCAT(CONCAT("%",#{evaluationMode}),"%")
+            </if>
+        </where>
+    </select>
+</mapper>
